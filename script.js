@@ -20,7 +20,7 @@ function TodoList () {
         } ;
     }
     const _id = secretFunctionId () ;
-
+        
     this.add = function( sCaption, sDescription ) {
         items.push( new TodoItem ( _id () , sCaption, sDescription ) ) ;
     }
