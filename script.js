@@ -1,6 +1,6 @@
 'use strict' ;
 
-function TodoItem ( id , caption , description ) {
+function TodoItem ( id , caption , description ) {          //инициализируем конструктор TodoItem
 
     this.id = id ;
     this.caption = caption ;
@@ -9,32 +9,36 @@ function TodoItem ( id , caption , description ) {
 }
 TodoItem.prototype.done = false ;
 
-function TodoList () {
-
-    let items = [] ;
-
-    function secretFunctionId () {
-        let value = 1 ;
-        return function () {
-            return value++ ;
-        } ;
-    }
-    const _id = secretFunctionId () ;
-        
-    this.add = function( sCaption, sDescription ) {
-        items.push( new TodoItem ( _id () , sCaption, sDescription ) ) ;
-    }
-
-    this.completeAll = function () {
-        items.forEach ( object => { object.done = true } ) ;
-    }   
-
-    //// метод для просмотра items, который нельзя менять извне
-    this.view = function () {
-        items.forEach ( object => { console.log( `id - ${object.id} , caption = ${object.caption} , description = ${object.description} , done - ${object.done}` ) }) ;
-    }
-
+function secretFunctionId () {
+    let value = 1 ;
+    return function () {
+        return value++ ;
+    } ;
 }
+const _id = secretFunctionId () ;
+
+function secretArray () {
+    let array = [] ;
+    return function () {
+        return array ;
+    }
+}
+const items = secretArray ()() ;  
+
+function TodoList () {}
+Object.defineProperties ( TodoList.prototype , {  //инициализируем прототип
+    'add' : {
+        value : function ( sCaption, sDescription ) { items.push ( new TodoItem ( _id () , sCaption, sDescription ) ) ; }
+    } ,
+    'completeAll' : {
+        value : function () { items.forEach ( object => { object.done = true } ) ; }   
+    } ,
+    'view' : {  // метод для просмотра items, которые нельзя менять извне
+        value : function () { items.forEach ( object => {
+            console.log( `id - ${object.id} , caption = ${object.caption} , description = ${object.description} , done - ${object.done}` ) 
+        }) }
+    } 
+}) ;
 
 const todoListObject = new TodoList () ;
 todoListObject.add( 'caption1' , 'description1' ) ;
