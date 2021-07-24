@@ -2,43 +2,48 @@
 
 function TodoItem ( id , caption , description ) {          //инициализируем конструктор TodoItem
 
+    this.done = false ;
     this.id = id ;
     this.caption = caption ;
     this.description = description ;
 
-}
-TodoItem.prototype.done = false ;
+}   
 
-function secretFunctionId () {
-    let value = 1 ;
-    return function () {
-        return value++ ;
-    } ;
-}
-const _id = secretFunctionId () ;
+function TodoList () {
 
-function secretArray () {
-    let array = [] ;
-    return function () {
-        return array ;
+    if (!new.target) return ;
+
+    const METH_ID = function () {
+        let value = 1 ;
+        return function () {
+            return value++ ;
+        } ;
     }
-}
-const items = secretArray ()() ;  
+    const PROP_ID = METH_ID () ;
+    
+    const METH_ITEMS = function () {
+        let array = [] ;
+        return function () {
+            return array ;
+        }
+    }
+    const PROP_ITEMS = METH_ITEMS ()() ;  
 
-function TodoList () {}                                     //инициализируем конструктор TodoList
-Object.defineProperties ( TodoList.prototype , {            
-    'add' : {
-        value : function ( sCaption, sDescription ) { items.push ( new TodoItem ( _id () , sCaption, sDescription ) ) ; }
-    } ,
-    'completeAll' : {
-        value : function () { items.forEach ( object => { object.done = true } ) ; }   
-    } ,
-    'view' : {  // метод для просмотра items, которые нельзя менять извне
-        value : function () { items.forEach ( object => {
-            console.log( `id - ${object.id} , caption = ${object.caption} , description = ${object.description} , done - ${object.done}` ) 
-        }) }
-    } 
-}) ;
+    Object.defineProperties ( TodoList.prototype , {            
+        'add' : {
+            value : function ( sCaption, sDescription ) { PROP_ITEMS.push ( new TodoItem ( PROP_ID () , sCaption, sDescription ) ) ; }
+        } ,
+        'completeAll' : {
+            value : function () { PROP_ITEMS.forEach ( object => { object.done = true } ) ; }   
+        } ,
+        'view' : {
+            value : function () { PROP_ITEMS.forEach ( object => {
+                console.log( `id - ${object.id} , caption = ${object.caption} , description = ${object.description} , done - ${object.done}` ) 
+            }) }
+        } 
+    }) ;
+
+}   
 
 const todoListObject = new TodoList () ;
 todoListObject.add( 'caption1' , 'description1' ) ;
