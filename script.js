@@ -25,8 +25,8 @@ function secretArray () {
 }
 const items = secretArray ()() ;  
 
-function TodoList () {}
-Object.defineProperties ( TodoList.prototype , {  //инициализируем прототип
+function TodoList () {}                                     //инициализируем конструктор TodoList
+Object.defineProperties ( TodoList.prototype , {            
     'add' : {
         value : function ( sCaption, sDescription ) { items.push ( new TodoItem ( _id () , sCaption, sDescription ) ) ; }
     } ,
